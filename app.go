@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/punkplod23/wails-project/csvparser"
+	"github.com/punkplod23/wails-project/csvparser/csvparser"
 )
 
 // App struct
