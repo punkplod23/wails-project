@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/punkplod23/wails-project/parsecsv/parsecsv"
+	"github.com/punkplod23/wails-project/internal/parsecsv"
 )
 
 // App struct

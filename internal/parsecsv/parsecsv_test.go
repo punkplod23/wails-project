@@ -1,9 +1,7 @@
-package github.com/punkplod23/wails-project/parsecsv/parsecsvtest
+package parsecsv
 
 import (
 	"testing"
-
-	"github.com/punkplod23/wails-project/parsecsv/parsecsv"
 )
 
 func TestFileName(t *testing.T) {

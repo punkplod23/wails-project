@@ -1,4 +1,4 @@
-package github.com/punkplod23/wails-project/parsecsv/parsecsv
+package parsecsv
 
 type CsvParser struct {
 	Filename string
