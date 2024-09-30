@@ -1,8 +1,4 @@
-package github.com/punkplod23/wails-project/csvparser
-
-import (
-	"fmt"
-)
+package github.com/punkplod23/wails-project/parsecsv/parsecsv
 
 type CsvParser struct {
 	Filename string

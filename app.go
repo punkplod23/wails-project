@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/punkplod23/wails-project/csvparser/csvparser"
+	"github.com/punkplod23/wails-project/parsecsv/parsecsv"
 )
 
 // App struct
@@ -29,7 +29,7 @@ func (a *App) Greet(name string) string {
 }
 
 func (a *App) RunCSV(filename string) string {
-	parser := csvparser.NewCSVParser()
+	parser := parsecsv.NewCSVParser()
 	parser.RunFile(filename)
 	return fmt.Sprintf("Hello %s, It's show time!", filename)
 }
