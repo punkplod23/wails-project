@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/punkplod23/wails-project/internal/parsecsv"
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 // App struct
@@ -28,8 +29,17 @@ func (a *App) Greet(name string) string {
 	return fmt.Sprintf("Hello %s, It's show time!", name)
 }
 
+func (a *App) SelectFile() string {
+	file, err := runtime.OpenFileDialog(a.ctx, runtime.OpenDialogOptions{})
+	if err != nil {
+		return err.Error()
+	}
+	return file
+}
+
 func (a *App) RunCSV(filename string) string {
-	parser := parsecsv.NewCSVParser()
-	parser.RunFile(filename)
-	return fmt.Sprintf("Hello %s, It's show time!", filename)
+	parser := parsecsv.NewCSVParser(a.ctx)
+	results := parser.RunFile(filename)
+	fmt.Println(results)
+	return fmt.Sprintf("Hello %s, It's show time!", results)
 }

@@ -9,3 +9,7 @@ export function Greet(arg1) {
 export function RunCSV(arg1) {
   return window['go']['main']['App']['RunCSV'](arg1);
 }
+
+export function SelectFile() {
+  return window['go']['main']['App']['SelectFile']();
+}
