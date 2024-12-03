@@ -11,14 +11,15 @@ import (
 )
 
 type CsvParser struct {
-	ctx         context.Context
-	FilePath    string
-	FileOutName string
-	FileWriter  *os.File
-	header      []string
-	row         [][]string
-	record      []string
-	CSVReader   *csv.Reader
+	ctx           context.Context
+	FilePath      string
+	FileOutName   string
+	FileWriter    *os.File
+	header        []string
+	row           [][]string
+	record        []string
+	CSVReader     *csv.Reader
+	InvertedIndex *Index
 }
 
 type csvRow struct {
@@ -29,7 +30,16 @@ type csvRow struct {
 func NewCSVParser(ctx context.Context) *CsvParser {
 	CsvParser := &CsvParser{}
 	CsvParser.ctx = ctx
+	index := &Index{}
+	index.ctx = ctx
+	CsvParser.InvertedIndex = index
 	return CsvParser
+}
+
+func (parser *CsvParser) Query(query string) string {
+	result := parser.InvertedIndex.SearchForResults(query)
+	fmt.Println(result)
+	return result
 }
 
 func (parser *CsvParser) RunFile(filePath string) string {
@@ -37,6 +47,7 @@ func (parser *CsvParser) RunFile(filePath string) string {
 	parser.FilePath = filePath
 	parser.reader()
 	parser.processCSV()
+	//ForResults("nzsioc")
 	return parser.complete()
 }
 
@@ -65,6 +76,7 @@ func (parser *CsvParser) processCSV() {
 	i := 0
 	delimeter := ""
 	json := ""
+
 	for {
 		record, err := parser.CSVReader.Read()
 		if err != nil {
@@ -85,22 +97,41 @@ func (parser *CsvParser) processCSV() {
 				delimeter = ","
 			}
 			json = delimeter + "{"
-
+			var tokens = make(map[string]struct{})
 			for itter, header := range parser.header {
 				if itter > 0 {
 					json += ","
 				}
+
 				json += string(header) + ":" + string(parser.record[itter])
 
 			}
 			json += "}"
+
+			for key, token := range parser.InvertedIndex.createTokens(parser.record) {
+				if _, ok := tokens[key]; ok {
+					continue
+				}
+				if key == "" {
+					continue
+				}
+				tokens[key] = token
+			}
+
 			if _, err := parser.FileWriter.Write([]byte(json)); err != nil {
 				panic(err)
 			}
-		}
 
+			byteSize, err := parser.FileWriter.Seek(0, io.SeekCurrent)
+			if err != nil {
+				fmt.Println("Error getting file position:", err)
+				return
+			}
+			parser.InvertedIndex.createIndexTokens(tokens, byteSize, len(json))
+		}
 		i++
 	}
+	parser.InvertedIndex.SaveIndexToFile()
 }
 
 func (parser *CsvParser) complete() string {
