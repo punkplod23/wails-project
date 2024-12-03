@@ -26,7 +26,9 @@ func (a *App) startup(ctx context.Context) {
 
 // Greet returns a greeting for the given name
 func (a *App) Greet(name string) string {
-	return fmt.Sprintf("Hello %s, It's show time!", name)
+	parser := parsecsv.NewCSVParser(a.ctx)
+	results := parser.Query(name)
+	return fmt.Sprintf("%s", results)
 }
 
 func (a *App) SelectFile() string {
